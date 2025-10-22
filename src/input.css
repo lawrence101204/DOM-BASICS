@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "components/buttons.css";
+@import "components/cards.css";
+@import "components/forms.css";
+@import "utilities/typography.css";
+@import "utilities/spacing.css";
+@import "themes/dark-mode.css";
+@import "themes/light-mode.css";
+@import "layouts/grid.css";
+@import "layouts/flexbox.css";
+@import "animations/hover-effects.css";
+

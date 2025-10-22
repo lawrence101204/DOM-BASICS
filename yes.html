@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DOM BASICS - Cart System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-600 via-purple-700 to-pink-500 min-h-screen p-6 font-sans">
+
+  <center><h1 class="text-3xl font-bold mb-6 text-gray-800">🛒 Cart System</h1></center>
+
+  <div class="flex gap-10">
+    <!-- Products Section -->
+    <div class="w-1/2 bg-white/70 backdrop-blur-md p-6 rounded-2xl shadow">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Products</h2>
+      <div id="product-list" class="grid grid-cols-2 gap-4">
+        <!-- Products will be inserted here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Cart Section -->
+    <div class="w-1/2 bg-white/70 backdrop-blur-md p-6 rounded-2xl shadow">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Carts</h2>
+      <ul id="cart-list" class="space-y-2 bg-white p-4 rounded shadow-inner mb-4">
+        <!-- Cart items appear here -->
+      </ul>
+
+      <!-- Total Section -->
+      <div class="text-lg font-bold text-gray-800 bg-white p-3 rounded shadow-inner flex justify-between items-center">
+        <span>Total:</span>
+        <span>₱<span id="total">0</span></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  const products = [
+    { name: "Apple", price: 100 },
+    { name: "Banana", price: 50 },
+    { name: "Orange", price: 80 },
+    { name: "Mango", price: 120 },
+    { name: "Pineapple", price: 200 },
+    { name: "Grapes", price: 150 },
+  ];
+
+  const productList = document.getElementById('product-list');
+  const cartList = document.getElementById('cart-list');
+  const totalDisplay = document.getElementById('total');
+  let total = 0;
+
+  const bgImages = {
+    Apple: "apple.jpeg",
+    Banana: "banana.jpeg",
+    Mango: "mango.jpeg",
+    Orange: "orange.jpeg",
+    Pineapple: "pineapple.jpeg",
+    Grapes: "grapes.jpeg",
+  };
+
+  products.forEach(product => {
+    const card = document.createElement('div');
+    card.className = 'p-4 rounded-xl shadow text-center hover:shadow-lg transition bg-white bg-cover bg-center';
+
+    if (bgImages[product.name]) {
+      card.style.backgroundImage = `url('${bgImages[product.name]}')`;
+      card.style.backgroundSize = "cover";
+      card.style.backgroundPosition = "center";
+      card.style.color = "white";
+      card.style.textShadow = "0 1px 3px rgba(0,0,0,0.7)";
+    }
+
+    card.innerHTML = `
+      <h3 class="text-lg font-bold">${product.name}</h3>
+      <p class="mb-2">₱${product.price} per 1kg</p>
+      <div class="flex justify-center items-center gap-2 mb-3">
+        <button class="minus bg-white text-black px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 font-bold">−</button>
+        <span class="quantity text-lg font-semibold">1</span>
+        <button class="plus bg-white text-black px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 font-bold">+</button>
+      </div>
+      <button class="add bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 active:scale-95 transition">Add to Cart</button>
+    `;
+
+    const qtyDisplay = card.querySelector('.quantity');
+    const plusBtn = card.querySelector('.plus');
+    const minusBtn = card.querySelector('.minus');
+    const addBtn = card.querySelector('.add');
+
+    let quantity = 1;
+
+    plusBtn.addEventListener('click', () => {
+      quantity++;
+      qtyDisplay.textContent = quantity;
+    });
+
+    minusBtn.addEventListener('click', () => {
+      if (quantity > 1) {
+        quantity--;
+        qtyDisplay.textContent = quantity;
+      }
+    });
+
+    addBtn.addEventListener('click', () => {
+      const price = product.price * quantity;
+
+      const li = document.createElement('li');
+      li.className = "flex justify-between items-center bg-gray-50 p-2 rounded shadow-sm";
+      li.innerHTML = `
+        <span>${product.name} (${quantity}kg) - ₱${price}</span>
+        <button class="text-red-500 font-bold hover:text-red-700 transition">✖</button>
+      `;
+
+      cartList.appendChild(li);
+
+      total += price;
+      totalDisplay.textContent = total;
+
+      const deleteBtn = li.querySelector('button');
+      deleteBtn.addEventListener('click', () => {
+        li.remove();
+        total -= price;
+        totalDisplay.textContent = total;
+      });
+
+      // Reset quantity to 1 after adding
+      quantity = 1;
+      qtyDisplay.textContent = quantity;
+    });
+
+    productList.appendChild(card);
+  });
+  </script>
+
+</body>
+</html>
